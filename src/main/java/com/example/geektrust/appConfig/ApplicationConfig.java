@@ -12,13 +12,13 @@ public class ApplicationConfig {
 
     //service obj creation
     private final IProgrammeService programmeService = new ProgrammeService(programmeRepository) ;
-    private final IBillService billService = new BillService(programmeService, programmeRepository);
+    private final IBillService billService = new BillService(programmeRepository);
 
     //command obj creation
     private final ICommand addProgrammeCommand = new AddProgrammeCommand(programmeService);
     private final ICommand applyCouponCommand = new ApplyCouponCommand(billService);
     private final ICommand printBillCommand = new PrintBillCommand(billService);
-    private final ICommand addProMembership = new AddProMembershipCommand(billService);
+    private final ICommand addProMembershipCommand = new AddProMembershipCommand(billService);
 
     private final CommandInvoker commandInvoker = new CommandInvoker();
 
@@ -27,7 +27,7 @@ public class ApplicationConfig {
         commandInvoker.register("ADD_PROGRAMME",addProgrammeCommand);//ADD_PROGRAMME CERTIFICATION 1
         commandInvoker.register("APPLY_COUPON",applyCouponCommand);//APPLY_COUPON DEAL_G20
         commandInvoker.register("PRINT_BILL",printBillCommand);//PRINT_BILL
-        commandInvoker.register("ADD_PRO_MEMBERSHIP",addProMembership);//PRINT_BILL
+        commandInvoker.register("ADD_PRO_MEMBERSHIP",addProMembershipCommand);//PRINT_BILL
 
         return commandInvoker;
     }

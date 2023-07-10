@@ -6,23 +6,21 @@ import com.example.geektrust.entities.Coupon;
 import com.example.geektrust.entities.Programme;
 import com.example.geektrust.repositories.IProgrammeRepository;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 public class BillService implements IBillService{
 
-    private IProgrammeRepository programmeRepository;
-    private IProgrammeService programmeService;
-    private Bill bill;
-    public BillService(IProgrammeService programmeService, IProgrammeRepository programmeRepository) {
+    private final IProgrammeRepository programmeRepository;
+
+    private final Bill bill;
+    public BillService(IProgrammeRepository programmeRepository) {
         this.programmeRepository = programmeRepository;
-        this.programmeService = programmeService;
         this.bill = new Bill();
     }
     @Override
     public void addProMem() {
         bill.setProMembershipAdded(true);
-        bill.setProMemFee(Constants.proMemFee);
+        bill.setProMemFee(Constants.PRO_MEM_FEE);
         this.calcProMemDiscount();
 //        System.out.println("Pro-Membership Added!!");
     }
@@ -30,7 +28,7 @@ public class BillService implements IBillService{
 
     public void applyCoupon(String ca){
         float disc = 0;
-        if(programmeRepository.numberOfProgrammes() >= Constants.minNumberOfProgrammesForMaxDiscount){
+        if(programmeRepository.numberOfProgrammes() >= Constants.MIN_NUMBER_OF_PROGRAMMES_FOR_MAX_DISCOUNT){
             bill.setCa(String.valueOf(Coupon.B4G1));
             disc = checkForMaxCoupon(disc);
         }else {
@@ -43,24 +41,24 @@ public class BillService implements IBillService{
         if(programmeRepository.getListOfProgramm().containsKey(Programme.DIPLOMA)){
             programmeRepository.removeFromList(Programme.DIPLOMA, 1);
             disc = bill.getDiscount() + Programme.DIPLOMA.price;
-            if(bill.isProMembershipAdded()) disc = disc * Constants.diplomaDiscount;
+            if(bill.isProMembershipAdded()) disc = disc * Constants.DIPLOMA_DISCOUNT;
         }else if(programmeRepository.getListOfProgramm().containsKey(Programme.CERTIFICATION)){
             programmeRepository.removeFromList(Programme.CERTIFICATION, 1);
             disc = bill.getDiscount() + Programme.CERTIFICATION.price;
-            if(bill.isProMembershipAdded()) disc = disc * Constants.certificationDiscount;
+            if(bill.isProMembershipAdded()) disc = disc * Constants.CERTIFICATION_DISCOUNT;
         }else if(programmeRepository.getListOfProgramm().containsKey(Programme.DEGREE)){
             programmeRepository.removeFromList(Programme.DEGREE, 1);
             disc = bill.getDiscount() + Programme.DEGREE.price;
-            if(bill.isProMembershipAdded()) disc = disc * Constants.degreeDiscount;
+            if(bill.isProMembershipAdded()) disc = disc * Constants.DEGREE_DISCOUNT;
         }
         return disc;
     }
 
     public float checkForOtherCoupon(float disc, String ca){
-        if(bill.getSubTotal()>=Constants.minPriceForOtherDiscount){
+        if(bill.getSubTotal()>=Constants.MIN_PRICE_FOR_OTHER_DISCOUNT){
             disc = getDiscountForMinPrice(disc, ca);
-        }else if(programmeRepository.numberOfProgrammes() >= Constants.minNumberOfProgrammesForMinDiscount && ca.equals(String.valueOf(Coupon.DEAL_G5))){
-            disc =  Constants.factorForDeal_G5_Discount * bill.getSubTotal();
+        }else if(programmeRepository.numberOfProgrammes() >= Constants.MIN_NUMBER_OF_PROGRAMMES_FOR_MIN_DISCOUNT && ca.equals(String.valueOf(Coupon.DEAL_G5))){
+            disc =  Constants.FACTOR_FOR_DEAL_G5_DISCOUNT * bill.getSubTotal();
             bill.setCa("DEAL_G5");
         }else{
             bill.setCa("NONE");
@@ -70,10 +68,10 @@ public class BillService implements IBillService{
 
     public float getDiscountForMinPrice(float disc, String ca) {
         if(ca.equals(String.valueOf(Coupon.DEAL_G20))){
-            disc = Constants.factorForDeal_G20_Discount * bill.getSubTotal();
+            disc = Constants.FACTOR_FOR_DEAL_G20_DISCOUNT * bill.getSubTotal();
             bill.setCa("DEAL_G20");
         }else if(ca.equals(String.valueOf(Coupon.DEAL_G5))){
-            disc =  Constants.factorForDeal_G5_Discount * bill.getSubTotal();
+            disc =  Constants.FACTOR_FOR_DEAL_G5_DISCOUNT * bill.getSubTotal();
             bill.setCa("DEAL_G5");
         }
         return disc;
@@ -98,13 +96,13 @@ public class BillService implements IBillService{
             for (Map.Entry<Programme, Integer> m : programmeRepository.getListOfProgramm().entrySet()) {
                 switch (String.valueOf(m.getKey())) {
                     case "CERTIFICATION":
-                        proDisc += m.getValue() * m.getKey().price * (1 - Constants.certificationDiscount);
+                        proDisc += m.getValue() * m.getKey().price * (1 - Constants.CERTIFICATION_DISCOUNT);
                         break;
                     case "DEGREE":
-                        proDisc += m.getValue() * m.getKey().price * (1 - Constants.degreeDiscount);
+                        proDisc += m.getValue() * m.getKey().price * (1 - Constants.DEGREE_DISCOUNT);
                         break;
                     case "DIPLOMA":
-                        proDisc += m.getValue() * m.getKey().price * (1 - Constants.diplomaDiscount);
+                        proDisc += m.getValue() * m.getKey().price * (1 - Constants.DIPLOMA_DISCOUNT);
                         break;
                 }
             }
@@ -113,8 +111,8 @@ public class BillService implements IBillService{
     }
 
     public void addEnrollmentFee(){
-        if(bill.getSubTotal() < Constants.minPriceForEnrollFee) {
-            bill.setEnrollFee(Constants.enrollFee);
+        if(bill.getSubTotal() < Constants.MIN_PRICE_FOR_ENROLL_FEE) {
+            bill.setEnrollFee(Constants.ENROLL_FEE);
         }
     }
 
