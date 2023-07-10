@@ -20,4 +20,8 @@ public class ProgrammeService implements IProgrammeService{
     public void removeProgram(Programme p, int qty) {
         programmeRepository.removeFromList(p,qty);
     }
+
+    public String program(Programme p){
+        return p.toString();
+    }
 }

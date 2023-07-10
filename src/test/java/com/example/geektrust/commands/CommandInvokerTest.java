@@ -27,20 +27,20 @@ public class CommandInvokerTest {
 
     private CommandInvoker commandInvoker;
     @Mock
-    AddProgrammeCommand addProgrammeCommand;
+    AddProgrammeCommand addProgrammeCommandMock;
 
     @Mock
-    AddProMembershipCommand addProMembershipCommand;
+    AddProMembershipCommand addProMembershipCommandMock;
 
     @Mock
-    ApplyCouponCommand applyCouponCommand;
+    ApplyCouponCommand applyCouponCommandMock;
 
     @BeforeEach
     void setup(){
         commandInvoker = new CommandInvoker();
-        commandInvoker.register("ADD_PROGRAMME",addProgrammeCommand);//ADD_PROGRAMME CERTIFICATION 1
-        commandInvoker.register("APPLY_COUPON",applyCouponCommand);//APPLY_COUPON DEAL_G20
-        commandInvoker.register("ADD_PRO_MEMBERSHIP",addProMembershipCommand);//PRINT_BILL
+        commandInvoker.register("ADD_PROGRAMME",addProgrammeCommandMock);//ADD_PROGRAMME CERTIFICATION 1
+        commandInvoker.register("APPLY_COUPON",applyCouponCommandMock);//APPLY_COUPON DEAL_G20
+        commandInvoker.register("ADD_PRO_MEMBERSHIP",addProMembershipCommandMock);//PRINT_BILL
     }
 
     @Test
